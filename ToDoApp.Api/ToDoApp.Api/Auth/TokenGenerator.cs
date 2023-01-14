@@ -31,7 +31,7 @@ namespace ToDoApp.Api.Auth
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(1),
                 signingCredentials: credentials);
-
+  
             var tokenGenerator = new JwtSecurityTokenHandler();
             var jwtString = tokenGenerator.WriteToken(token);
             return jwtString;

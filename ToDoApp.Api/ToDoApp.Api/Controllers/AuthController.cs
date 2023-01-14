@@ -7,11 +7,12 @@ namespace ToDoApp.Api.Controllers
     [Route("[controller]")]
     public class AuthController : ControllerBase
     {
-        [HttpGet]
-        [Route( "ping")]
+        [HttpPost("ping")]
+        [HttpGet("ping")]
         public string Ping()
         {
-            return "pong";
+
+            return "Pong";
         }
 
 
