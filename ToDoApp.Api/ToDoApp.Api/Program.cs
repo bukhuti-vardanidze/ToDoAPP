@@ -16,6 +16,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
+//
+builder.Services.AddDbContextPool<AppDbContext>(c =>
+    c.UseSqlServer(builder.Configuration["AppDbContextConnection"]));
+
+
 ////ent
 //var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
 //optionsBuilder.UseSqlServer("Server=localhost;Database=todoapp_db;User Id=sa;Password=pass123;");

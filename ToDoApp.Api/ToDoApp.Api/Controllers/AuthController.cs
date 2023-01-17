@@ -23,10 +23,23 @@ namespace ToDoApp.Api.Controllers
         }
 
 
+        // todo : register
+
+
+        // todo : RequestPasswordReset
+
+
+        // todo : ResetPassword
+
+
+
         [HttpPost("login/{email}")]
         public string Login(string email)
         {
             // TODO:Check user credentials...
+
+
+
             return _tokenGenerator.Generate(email);
         }
 
