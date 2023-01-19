@@ -44,17 +44,35 @@ namespace ToDoApp.Api.Controllers
             var entity = new UserEntity();
             entity.Email = request.Email;
             var result = await _userManager.CreateAsync(entity,request.Password);
+             
+            if(!result.Succeeded)
+            {
+                var firstError =  result.Errors.First();
+                return BadRequest(firstError.Description);
+            }
+
+            return Ok();
+        
         }
 
 
         [HttpPost("login")]
-        public string Login(string email)
+        public async Task<IActionResult> Login([FromBody]LoginRequest request)
         {
-            // TODO:Check user credentials...
+            var user =  await _userManager.FindByEmailAsync(request.Email);
+            if (user == null)
+            {
+                return NotFound("User Not Found!");
 
+            }
 
-
-            return _tokenGenerator.Generate(email);
+            var isCorrectPassword = await _userManager.CheckPasswordAsync(user, request.Password);
+            if(!isCorrectPassword)
+            {
+                return BadRequest("Invalid Email or Password");
+            }  
+             
+            return Ok(_tokenGenerator.Generate(request.Email));
         }
 
 
