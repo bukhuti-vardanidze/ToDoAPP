@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using ToDoApp.Api.Auth;
+using ToDoApp.Api.Db.Entities;
+using ToDoApp.Api.Models.Requests;
 
 namespace ToDoApp.Api.Controllers
 {
@@ -9,9 +12,12 @@ namespace ToDoApp.Api.Controllers
     {
         private TokenGenerator _tokenGenerator;
 
-        public AuthController(TokenGenerator tokenGenerator)
+        private UserManager<UserEntity> _userManager;
+
+        public AuthController(TokenGenerator tokenGenerator, UserManager<UserEntity> userManager)
         {
             _tokenGenerator = tokenGenerator;
+            _userManager = userManager;
         }
 
         [HttpPost("ping")]
@@ -31,9 +37,17 @@ namespace ToDoApp.Api.Controllers
 
         // todo : ResetPassword
 
+        [HttpPost("Register")]
+
+        public async Task<IActionResult> Register([FromBody]RegisterUserRequest request)
+        {
+            var entity = new UserEntity();
+            entity.Email = request.Email;
+            var result = await _userManager.CreateAsync(entity,request.Password);
+        }
 
 
-        [HttpPost("login/{email}")]
+        [HttpPost("login")]
         public string Login(string email)
         {
             // TODO:Check user credentials...
