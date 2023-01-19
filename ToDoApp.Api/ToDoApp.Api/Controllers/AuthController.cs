@@ -76,5 +76,15 @@ namespace ToDoApp.Api.Controllers
         }
 
 
+        [HttpPost("passwordReset")]
+        public async Task<IActionResult> PasswordReset([FromBody]ResetPasswordRequest resetPassword)
+        {
+
+            //..
+
+
+            return Ok();
+        }
+
     }
 }
