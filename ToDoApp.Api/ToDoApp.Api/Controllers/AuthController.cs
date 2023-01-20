@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using ToDoApp.Api.Auth;
+using ToDoApp.Api.Db;
 using ToDoApp.Api.Db.Entities;
 using ToDoApp.Api.Models.Requests;
 
@@ -14,9 +15,11 @@ namespace ToDoApp.Api.Controllers
         private TokenGenerator _tokenGenerator;
 
         private UserManager<UserEntity> _userManager;
+        private readonly AppDbContext _db;
 
-        public AuthController(TokenGenerator tokenGenerator, UserManager<UserEntity> userManager)
+        public AuthController(AppDbContext db, TokenGenerator tokenGenerator, UserManager<UserEntity> userManager)
         {
+             _db = db;
             _tokenGenerator = tokenGenerator;
             _userManager = userManager;
         }
@@ -101,18 +104,25 @@ namespace ToDoApp.Api.Controllers
 
             }
 
-
-
-
             // 1 -  generate password reset token
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
 
             // 2 -  insert email into sendEmailRequest table
-            // 3 -  return result
 
+            var sendEmailRequestEntity = new SendEmailRequestEntity();
+            sendEmailRequestEntity.ToAdress = request.Email;
+            sendEmailRequestEntity.Status = SendEmailRequestStatus.New;
+            sendEmailRequestEntity.CreatedAt = DateTime.Now;
+            var resetUrl = $" <a href=\"https://localhost:7261/api/Auth/reset-password/{token}\"> Reset Password</a>"
+            sendEmailRequestEntity.Body = $"Hello, your password reset link is :{resetUrl} ";
+            _db.SendEmailRequests.Add(sendEmailRequestEntity);
+            await _db.SaveChangesAsync();
+
+            // 3 -  return result
             return Ok();
+            
 
         }
 
