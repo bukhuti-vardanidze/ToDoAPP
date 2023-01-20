@@ -15,8 +15,10 @@ namespace ToDoApp.Api.Controllers
         private TokenGenerator _tokenGenerator;
 
         private UserManager<UserEntity> _userManager;
+        
         private readonly AppDbContext _db;
 
+        //....
         public AuthController(AppDbContext db, TokenGenerator tokenGenerator, UserManager<UserEntity> userManager)
         {
              _db = db;
@@ -47,6 +49,7 @@ namespace ToDoApp.Api.Controllers
         public async Task<IActionResult> Register([FromBody]RegisterUserRequest request)
         {
             var entity = new UserEntity();
+            entity.UserName = request.Email;
             entity.Email = request.Email;
             var result = await _userManager.CreateAsync(entity,request.Password);
              
@@ -115,7 +118,11 @@ namespace ToDoApp.Api.Controllers
             sendEmailRequestEntity.ToAdress = request.Email;
             sendEmailRequestEntity.Status = SendEmailRequestStatus.New;
             sendEmailRequestEntity.CreatedAt = DateTime.Now;
-            var resetUrl = $" <a href=\"https://localhost:7261/api/Auth/reset-password/{token}\"> Reset Password</a>"
+
+
+            //.....
+
+            var resetUrl = $" <a href=\"https://localhost:7261/api/Auth/reset-password/{token}\"> Reset Password</a>";
             sendEmailRequestEntity.Body = $"Hello, your password reset link is :{resetUrl} ";
             _db.SendEmailRequests.Add(sendEmailRequestEntity);
             await _db.SaveChangesAsync();
@@ -126,5 +133,21 @@ namespace ToDoApp.Api.Controllers
 
         }
 
+        [HttpPost("reset-password/{token}")]
+        public async Task<IActionResult> ResetPassword([FromBody]ResetPasswordRequest request)
+        {
+            var user = await _userManager.FindByIdAsync(request.UserID.ToString());
+
+            if (user == null)
+            {
+                return NotFound("user not found");
+            }
+
+            var resetResult = await _userManager.ResetPasswordAsync(user, request.Token, request.Password);
+
+            //.....
+            return Ok();
+        }
+        
     }
 }
