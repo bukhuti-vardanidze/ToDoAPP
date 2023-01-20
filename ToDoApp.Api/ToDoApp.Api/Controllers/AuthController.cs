@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using ToDoApp.Api.Auth;
 using ToDoApp.Api.Db.Entities;
 using ToDoApp.Api.Models.Requests;
@@ -29,7 +30,7 @@ namespace ToDoApp.Api.Controllers
         }
 
 
-        // todo : register
+        
 
 
         // todo : RequestPasswordReset
@@ -37,6 +38,7 @@ namespace ToDoApp.Api.Controllers
 
         // todo : ResetPassword
 
+        
         [HttpPost("Register")]
 
         public async Task<IActionResult> Register([FromBody]RegisterUserRequest request)
@@ -76,14 +78,42 @@ namespace ToDoApp.Api.Controllers
         }
 
 
-        [HttpPost("passwordReset")]
-        public async Task<IActionResult> PasswordReset([FromBody]ResetPasswordRequest resetPassword)
+
+
+        
+
+
+        //RequestPasswordReset
+        // 1 - validate token
+        // 2 - validate new password
+        // 3 re
+
+
+
+        [HttpPost("request-password-reset")]
+        public async Task<IActionResult> RequestPasswordReset([FromBody]RequestPasswordResetRequest request)
         {
+            // 0 -  find user
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if(user == null)
+            {
+                return NotFound("User Not Found");
 
-            //..
+            }
 
+
+
+
+            // 1 -  generate password reset token
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+
+            // 2 -  insert email into sendEmailRequest table
+            // 3 -  return result
 
             return Ok();
+
         }
 
     }
