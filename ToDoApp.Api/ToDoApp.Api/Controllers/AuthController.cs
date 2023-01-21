@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using ToDoApp.Api.Auth;
 using ToDoApp.Api.Db;
 using ToDoApp.Api.Db.Entities;
-using ToDoApp.Api.Models.Repositories;
+using ToDoApp.Api.Repositories;
 using ToDoApp.Api.Models.Requests;
 
 namespace ToDoApp.Api.Controllers
@@ -117,7 +117,7 @@ namespace ToDoApp.Api.Controllers
             sendEmailRequestEntity.CreatedAt = DateTime.Now;
 
 
-            //.....
+            
           //  $" <a href=\"https://localhost:7261/api/Auth/reset-password/{token}\"> Reset Password</a>";
             var url = _configuration["PasswordResetUrl"]!
                 .Replace("{userId}", user.Id.ToString())
@@ -146,7 +146,7 @@ namespace ToDoApp.Api.Controllers
 
             var resetResult = await _userManager.ResetPasswordAsync(user, request.Token, request.Password);
 
-            //.....
+         
 
             if(!resetResult.Succeeded)
             {
