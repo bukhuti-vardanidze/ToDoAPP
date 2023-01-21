@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using ToDoApp.Api.Auth;
 using ToDoApp.Api.Db;
 using ToDoApp.Api.Db.Entities;
+using ToDoApp.Api.Models.Repositories;
 using ToDoApp.Api.Models.Requests;
 
 namespace ToDoApp.Api.Controllers
@@ -13,15 +14,13 @@ namespace ToDoApp.Api.Controllers
     public class AuthController : ControllerBase
     {
         private TokenGenerator _tokenGenerator;
-
         private UserManager<UserEntity> _userManager;
-        
-        private readonly AppDbContext _db;
-
-        //....
-        public AuthController(AppDbContext db, TokenGenerator tokenGenerator, UserManager<UserEntity> userManager)
+        private readonly IConfiguration _configuration;
+        private readonly ISendEmailRequestRepository  _sendEmailRequestRepository;
+        public AuthController(IConfiguration configuration, TokenGenerator tokenGenerator, UserManager<UserEntity> userManager, ISendEmailRequestRepository sendEmailRequestRepository)
         {
-             _db = db;
+           _configuration = configuration;
+            _sendEmailRequestRepository= sendEmailRequestRepository;
             _tokenGenerator = tokenGenerator;
             _userManager = userManager;
         }
@@ -34,8 +33,6 @@ namespace ToDoApp.Api.Controllers
             return "Pong";
         }
 
-
-        
 
 
         // todo : RequestPasswordReset
@@ -121,11 +118,15 @@ namespace ToDoApp.Api.Controllers
 
 
             //.....
-
-            var resetUrl = $" <a href=\"https://localhost:7261/api/Auth/reset-password/{token}\"> Reset Password</a>";
+          //  $" <a href=\"https://localhost:7261/api/Auth/reset-password/{token}\"> Reset Password</a>";
+            var url = _configuration["PasswordResetUrl"]!
+                .Replace("{userId}", user.Id.ToString())
+                .Replace("{token}", token);
+            var resetUrl = $"<a href=\"{url}\" > Reset password </a>";
             sendEmailRequestEntity.Body = $"Hello, your password reset link is :{resetUrl} ";
-            _db.SendEmailRequests.Add(sendEmailRequestEntity);
-            await _db.SaveChangesAsync();
+
+            _sendEmailRequestRepository.insert(sendEmailRequestEntity);
+            await _sendEmailRequestRepository.SaveChangesAsync();
 
             // 3 -  return result
             return Ok();
