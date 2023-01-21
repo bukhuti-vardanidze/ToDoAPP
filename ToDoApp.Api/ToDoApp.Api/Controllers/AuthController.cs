@@ -125,7 +125,7 @@ namespace ToDoApp.Api.Controllers
             var resetUrl = $"<a href=\"{url}\" > Reset password </a>";
             sendEmailRequestEntity.Body = $"Hello, your password reset link is :{resetUrl} ";
 
-            _sendEmailRequestRepository.insert(sendEmailRequestEntity);
+            _sendEmailRequestRepository.Insert(sendEmailRequestEntity);
             await _sendEmailRequestRepository.SaveChangesAsync();
 
             // 3 -  return result
