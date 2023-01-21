@@ -147,6 +147,14 @@ namespace ToDoApp.Api.Controllers
             var resetResult = await _userManager.ResetPasswordAsync(user, request.Token, request.Password);
 
             //.....
+
+            if(!resetResult.Succeeded)
+            {
+                var firstError = resetResult.Errors.First();
+                return StatusCode(500, firstError.Description);
+            }
+
+
             return Ok();
         }
         
