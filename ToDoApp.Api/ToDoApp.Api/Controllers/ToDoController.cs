@@ -4,7 +4,7 @@ namespace ToDoApp.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ToDoController:ControllerBase
+    public class ToDoController : ControllerBase
     {
         ///
     }

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using ToDoApp.Api.Auth;
 using ToDoApp.Api.Db;
 using ToDoApp.Api.Db.Entities;
+using ToDoApp.Api.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +22,7 @@ builder.Services.AddDbContextPool<AppDbContext>(c =>
     c.UseSqlServer(builder.Configuration["AppDbContextConnection"]));
 
 
-
+builder.Services.AddTransient<ISendEmailRequestRepository, SendEmailRequestRepository>();
 
 
 var app = builder.Build();
