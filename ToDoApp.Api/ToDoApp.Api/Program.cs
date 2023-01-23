@@ -25,6 +25,9 @@ builder.Services.AddDbContextPool<AppDbContext>(c =>
 builder.Services.AddTransient<ISendEmailRequestRepository, SendEmailRequestRepository>();
 
 
+// =>
+builder.Services.AddTransient<IToDoRequestRepository, ToDoRequestRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

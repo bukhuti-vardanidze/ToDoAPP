@@ -7,22 +7,22 @@ namespace ToDoApp.Api.Repositories
 
 
 
-    public interface IToDoRepository
+    public interface IToDoRequestRepository
     {
-        void Insert(ToDoEntity entity);
+        void Insert(ToDoRequestEntity entity);
         Task SaveChangesAsync();
     }
 
-    public class ToDoRepository : IToDoRepository
+    public class ToDoRequestRepository : IToDoRequestRepository
     {
         private readonly AppDbContext _db;
 
-        public ToDoRepository(AppDbContext db)
+        public ToDoRequestRepository(AppDbContext db)
         {
             _db = db;
         }
 
-        public void Insert(ToDoEntity entity)
+        public void Insert(ToDoRequestEntity entity)
         {
             _db.ToDoRequest.Add(entity);
         }
