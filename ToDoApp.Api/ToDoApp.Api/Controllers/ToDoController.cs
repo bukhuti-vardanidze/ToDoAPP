@@ -6,6 +6,6 @@ namespace ToDoApp.Api.Controllers
     [Route("api/[controller]")]
     public class ToDoController : ControllerBase
     {
-        ///
+        
     }
 }
