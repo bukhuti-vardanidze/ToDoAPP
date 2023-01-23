@@ -8,7 +8,7 @@
         Sent,
         Failed
     }
-    public class ToDoRequestEntity
+    public class ToDoEntity
     {
         public long Id { get; set; }
         public string UserId { get; set; }

@@ -9,7 +9,7 @@ namespace ToDoApp.Api.Repositories
 
     public interface IToDoRequestRepository
     {
-        void Insert(ToDoRequestEntity entity);
+        void Insert(ToDoEntity entity);
         Task SaveChangesAsync();
     }
 
@@ -22,7 +22,7 @@ namespace ToDoApp.Api.Repositories
             _db = db;
         }
 
-        public void Insert(ToDoRequestEntity entity)
+        public void Insert(ToDoEntity entity)
         {
             _db.ToDoRequest.Add(entity);
         }
