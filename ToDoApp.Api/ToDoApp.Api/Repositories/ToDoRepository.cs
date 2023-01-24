@@ -45,6 +45,19 @@ namespace ToDoApp.Api.Repositories
             _db.ToDos.AddAsync(entity);
         }
 
+        public List<ToDoEntity> Search(string filter, int pageSize, int pageIndex)
+        {
+            var entities = _db.ToDos
+                .Where(t => t.UserId == 1)
+                .Where(t => t.Title.Contains(filter))
+                .Skip(pageIndex * pageSize)
+                .Take(pageSize)
+                .OrderBy(t => t.Deadline)
+                .ToList();
+
+            return entities;
+        }
+
         public async Task SaveChangesAsync()
         {
             await _db.SaveChangesAsync();
