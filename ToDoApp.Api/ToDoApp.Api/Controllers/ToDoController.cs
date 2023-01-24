@@ -23,7 +23,7 @@ namespace ToDoApp.Api.Controllers
         public async Task<IActionResult> Create([FromBody] ToDoCreateRequest toDoCreateRequest)
         {
             var entity = new ToDoEntity();
-            entity.UserId = toDoCreateRequest.UserId;
+            entity.Title = toDoCreateRequest.Title;
             entity.Description = toDoCreateRequest.Description;
             entity.Deadline = toDoCreateRequest.Deadline;
            // var result = await toDoCreateRequest.Equals(entity);
