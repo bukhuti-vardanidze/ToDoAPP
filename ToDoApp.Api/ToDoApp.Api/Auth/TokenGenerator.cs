@@ -31,7 +31,7 @@ namespace ToDoApp.Api.Auth
                 issuer: _settings.Issuer,
                 audience: _settings.Audience,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(1),
+                expires: DateTime.Now.AddMinutes(60),
                 signingCredentials: credentials);
   
             var tokenGenerator = new JwtSecurityTokenHandler();

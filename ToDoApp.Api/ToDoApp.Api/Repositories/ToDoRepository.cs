@@ -10,7 +10,7 @@ namespace ToDoApp.Api.Repositories
     public interface IToDoRepository
     {
         // void Insert(ToDoEntity entity);
-         void  InsertAsync(int userId, string title, string description, DateTime deadline);
+            Task InsertAsync(int userId, string title, string description, DateTime deadline);
         
             Task SaveChangesAsync();
     }

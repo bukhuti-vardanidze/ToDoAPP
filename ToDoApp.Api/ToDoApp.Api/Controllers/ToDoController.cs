@@ -23,7 +23,7 @@ namespace ToDoApp.Api.Controllers
 
         // Create
 
-        [Authorize]
+        [Authorize("ApiUser", AuthenticationSchemes = "Bearer")]
         [HttpPost("Create")]
         public async Task<IActionResult> Create([FromBody] ToDoCreateRequest request)
         {
