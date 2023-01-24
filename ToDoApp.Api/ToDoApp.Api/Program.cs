@@ -26,7 +26,7 @@ builder.Services.AddTransient<ISendEmailRequestRepository, SendEmailRequestRepos
 
 
 // =>
-builder.Services.AddTransient<IToDoRequestRepository, ToDoRequestRepository>();
+builder.Services.AddTransient<IToDoRepository, ToDoRepository>();
 
 var app = builder.Build();
 

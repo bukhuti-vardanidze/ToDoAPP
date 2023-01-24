@@ -10,12 +10,15 @@
     }
     public class ToDoEntity
     {
-        
-        public string Title { get; set; }
+        public long Id { get; set; }
+        public int UserId { get; set; }
         public string Description { get; set; }
+        public string Title { get; set; }
         public ToDoEntityStatus Status { get; set; }
-        public DateTime Deadline { get; set; }
-      
+
+        public DateTime CreatedAt { get; set; }
+        public DateTime Deadline  { get; set; }
+
 
 
     }

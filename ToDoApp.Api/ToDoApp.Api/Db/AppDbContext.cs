@@ -9,6 +9,7 @@ namespace ToDoApp.Api.Db
     {
 
         public DbSet<SendEmailRequestEntity> SendEmailRequests { get; set; }
+        public DbSet<ToDoEntity> ToDos { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options):base(options)
         {
