@@ -1,5 +1,6 @@
 ﻿using ToDoApp.Api.Db.Entities;
 using ToDoApp.Api.Db;
+using ToDoApp.Api.Models.Requests;
 
 namespace ToDoApp.Api.Repositories
 {
@@ -11,7 +12,11 @@ namespace ToDoApp.Api.Repositories
     {
         // void Insert(ToDoEntity entity);
             Task InsertAsync(int userId, string title, string description, DateTime deadline);
-        
+
+
+            List<ToDoEntity> Search(string filter, int pageSize, int pageIndex);
+
+            Task StatusChangerAsync(ToDoStatusChanger toDoStatus);
             Task SaveChangesAsync();
     }
 
@@ -54,9 +59,32 @@ namespace ToDoApp.Api.Repositories
                 .Take(pageSize)
                 .OrderBy(t => t.Deadline)
                 .ToList();
-
+            
             return entities;
         }
+
+          
+        
+        
+        
+        //
+        public async Task StatusChangerAsync(ToDoStatusChanger toDoStatus)
+        {
+            var toDoSt = _db.ToDos.Where(s => s.Title == toDoStatus.Title);
+            // toDoSt.Status == toDoStatus.Status;
+             return toDoSt;
+
+        }
+
+        public List<ToDoEntity> TDInfoGiver(ToDoInfoGiverRequest toDoInfo)
+        {
+            var DeadlineData = _db.ToDos.OrderBy(d => d.Deadline).ToList();
+            return DeadlineData;
+        }
+
+
+
+        //
 
         public async Task SaveChangesAsync()
         {

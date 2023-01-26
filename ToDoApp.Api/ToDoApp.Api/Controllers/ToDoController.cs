@@ -27,19 +27,7 @@ namespace ToDoApp.Api.Controllers
         [HttpPost("Create")]
         public async Task<IActionResult> Create([FromBody] ToDoCreateRequest request)
         {
-            // var entity = new ToDoEntity();
-            // entity.Title = toDoCreateRequest.Title;
-            // entity.Description = toDoCreateRequest.Description;
-            // entity.Deadline = toDoCreateRequest.Deadline;
-            //// var result = await toDoCreateRequest.Equals(entity);
-
-            // //if (!result.Succeeded)
-            // //{
-            // //    var firstError = result.Errors.First();
-            // //    return BadRequest(firstError.Description);
-            // //}
-
-            // return Ok();
+            
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -55,5 +43,41 @@ namespace ToDoApp.Api.Controllers
 
         }
 
-    }
+
+
+        //
+
+        [Authorize("ApiUser", AuthenticationSchemes = "Bearer")]
+        [HttpPost("statusChanger")]
+        public async Task<IActionResult> StatusChanger([FromBody] ToDoStatusChanger request)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound("User Not Found");
+            }
+            await _todoRepository.StatusChangerAsync(request);
+            await _todoRepository.SaveChangesAsync();
+            return Ok();
+
+        }
+
+
+        //
+
+        [Authorize("ApiUser", AuthenticationSchemes = "Bearer")]
+        [HttpPost("InfoGiver")]
+        public List<ToDoEntity> InfoGiver([FromBody] ToDoStatusChanger request)
+        {
+            var user =  _userManager.GetUserAsync(User);
+            //if (user == null)
+            //{
+            //    return NotFound("User Not Found");
+            //}
+
+
+        }
+
+
+        }
 }
