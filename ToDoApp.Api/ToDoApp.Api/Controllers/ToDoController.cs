@@ -75,6 +75,15 @@ namespace ToDoApp.Api.Controllers
             //    return NotFound("User Not Found");
             //}
 
+           
+
+        }
+
+        //
+        [Authorize("ApiUser", AuthenticationSchemes = "Bearer")]
+        [HttpPost("statusChanger")]
+        public async Task<IActionResult> StatusChanger([FromBody] ToDoStatusChanger request)
+        {
 
         }
 

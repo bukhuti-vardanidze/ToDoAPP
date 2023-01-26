@@ -82,11 +82,16 @@ namespace ToDoApp.Api.Repositories
             return DeadlineData;
         }
 
+        public async Task InfoUpdateAsync(ToDoUpdateRequest toDoStatus)
+        { 
+            //title,description
+            
 
+        }
 
-        //
+            //
 
-        public async Task SaveChangesAsync()
+            public async Task SaveChangesAsync()
         {
             await _db.SaveChangesAsync();
         }
