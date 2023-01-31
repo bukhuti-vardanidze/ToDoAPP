@@ -1,6 +1,7 @@
 ﻿using ToDoApp.Api.Db.Entities;
 using ToDoApp.Api.Db;
 using ToDoApp.Api.Models.Requests;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ToDoApp.Api.Repositories
 {
@@ -12,11 +13,12 @@ namespace ToDoApp.Api.Repositories
     {
         // void Insert(ToDoEntity entity);
             Task InsertAsync(int userId, string title, string description, DateTime deadline);
-
-
             List<ToDoEntity> Search(string filter, int pageSize, int pageIndex);
 
-            Task StatusChangerAsync(ToDoStatusChanger toDoStatus);
+            Task<List<ToDoEntity>> StatusChangerAsync([FromBody] ToDoStatusChanger toDoStatus);
+            Task UpdateToDoAsync(ToDoUpdateRequest request);
+            Task<List<ToDoEntity>> CreateToDoAsync([FromBody] ToDoCreateRequest request);
+            Task<List<ToDoEntity>> ToDoSearch(ToDoSearchRequest toDoInfo);
             Task SaveChangesAsync();
     }
 
@@ -63,35 +65,75 @@ namespace ToDoApp.Api.Repositories
             return entities;
         }
 
-          
-        
-        
-        
-        //
-        public async Task StatusChangerAsync(ToDoStatusChanger toDoStatus)
-        {
-            var toDoSt = _db.ToDos.Where(s => s.Title == toDoStatus.Title);
-            // toDoSt.Status == toDoStatus.Status;
-             return toDoSt;
 
+        //
+        public async Task<List<ToDoEntity>> StatusChangerAsync([FromBody] ToDoStatusChanger toDoStatus)
+        {
+            var result = await _db.ToDos.FindAsync(toDoStatus.Id);
+            if(result.Status == ToDoEntityStatus.Sent)
+            {
+                toDoStatus.Status = ToDoEntityStatus.Sent;
+            }
+            if (result.Status == ToDoEntityStatus.Failed)
+            {
+                toDoStatus.Status = ToDoEntityStatus.Failed;
+            }
+            _db.ToDos.Update(result);
+            return result;
+
+        }
+        
+    
+
+       
+
+        public async Task<List<ToDoEntity>> CreateToDoAsync([FromBody] ToDoCreateRequest request)
+        {
+            var newRequest = new ToDoEntity
+            {
+                Title = request.Title,
+                Description = request.Description,
+                Deadline = request.Deadline
+
+            };
+            _db.ToDos.AddAsync(newRequest);
+            return newRequest;
+        
+           
+        }
+
+
+        public async Task UpdateToDoAsync(ToDoUpdateRequest request)
+        {
+            var toDo =  _db.ToDos.Where(t => t.Title == request.updatedTitle).FirstOrDefault();
+            if (!string.IsNullOrEmpty(request.updatedTitle))
+            {
+                toDo.Title = request.updatedTitle;
+            }
+            if (!string.IsNullOrEmpty(request.updatedDescription))
+            {
+                toDo.Description = request.updatedDescription;
+            }
+            _db.ToDos.Update(toDo);
+                
         }
 
         public List<ToDoEntity> TDInfoGiver(ToDoInfoGiverRequest toDoInfo)
         {
-            var DeadlineData = _db.ToDos.OrderBy(d => d.Deadline).ToList();
+            var DeadlineData = _db.ToDos.OrderBy(d => d.Deadline == toDoInfo.Deadline).ToList();
             return DeadlineData;
         }
 
-        public async Task InfoUpdateAsync(ToDoUpdateRequest toDoStatus)
-        { 
-            //title,description
-            
-
+        public async Task<List<ToDoEntity>> ToDoSearch(ToDoSearchRequest toDoInfo)
+        {
+            var search = _db.ToDos.Where(s=>s.Title == toDoInfo.Title).ToList();
+            return search;
+           
         }
 
-            //
 
-            public async Task SaveChangesAsync()
+
+        public async Task SaveChangesAsync()
         {
             await _db.SaveChangesAsync();
         }

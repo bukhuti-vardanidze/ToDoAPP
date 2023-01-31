@@ -58,35 +58,80 @@ namespace ToDoApp.Api.Controllers
             }
             await _todoRepository.StatusChangerAsync(request);
             await _todoRepository.SaveChangesAsync();
-            return Ok();
-
+            return Ok(request);
+            
         }
 
 
-        //
+        [Authorize("ApiUser", AuthenticationSchemes = "Bearer")]
+        [HttpGet("createToDo")]
+        public async Task<IActionResult> createToDo([FromBody] ToDoCreateRequest request)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound("User Not Found");
+            }
+            await _todoRepository.CreateToDoAsync(request);
+            await _todoRepository.SaveChangesAsync();
+            return Ok(request);
+
+        }
+
+        [Authorize("ApiUser", AuthenticationSchemes = "Bearer")]
+        [HttpPost("updateToDo")]
+        public async Task<IActionResult> updateToDo([FromBody] ToDoUpdateRequest request)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound("User Not Found");
+            }
+            await _todoRepository.UpdateToDoAsync(request);
+            await _todoRepository.SaveChangesAsync();
+            return Ok(request);
+
+        }
 
         [Authorize("ApiUser", AuthenticationSchemes = "Bearer")]
         [HttpPost("InfoGiver")]
-        public List<ToDoEntity> InfoGiver([FromBody] ToDoStatusChanger request)
+        public async Task<IActionResult> InfoGiver([FromBody] ToDoInfoGiverRequest request)
         {
-            var user =  _userManager.GetUserAsync(User);
-            //if (user == null)
-            //{
-            //    return NotFound("User Not Found");
-            //}
-
-           
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound("User Not Found");
+            }
+            await _todoRepository.ToDoSearch(request);
+            await _todoRepository.SaveChangesAsync();
+            return Ok(request);
 
         }
 
-        //
         [Authorize("ApiUser", AuthenticationSchemes = "Bearer")]
-        [HttpPost("statusChanger")]
-        public async Task<IActionResult> StatusChanger([FromBody] ToDoStatusChanger request)
+        [HttpPost("ToDoSearch")]
+        public async Task<IActionResult> ToDoSearch([FromBody] ToDoSearchRequest request)
         {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound("User Not Found");
+            }
+            await _todoRepository.ToDoSearch(request);
+            await _todoRepository.SaveChangesAsync();
+            return Ok(request);
 
         }
 
 
-        }
+
+
+
+
+
+
+
+
+
+    }
 }
